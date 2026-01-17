@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Canales Creative Agency — Photography, Video & Social</title>
+  <meta name="description" content="Canales Creative Agency — photography, video, and social that converts. Book inquiries and view selected work." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a class="logo" href="#" aria-label="Canales Creative Agency">Canales Creative Agency</a>
+      <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+        ☰
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation" aria-hidden="true">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero" aria-labelledby="home-heading">
+      <div class="container">
+        <h1 id="home-heading">Creative visuals that turn viewers into customers</h1>
+        <p class="lead">Photography • Video • Social — Strategic, photo-forward content and campaigns that convert.</p>
+        <p><a class="btn" href="#contact">Book a discovery call</a></p>
+      </div>
+    </section>
+
+    <section id="services" class="container services" aria-labelledby="services-heading">
+      <h2 id="services-heading">Services & Packages</h2>
+      <p class="muted">Clear packages for small businesses and creators. Custom pricing available.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Visual Starter</h3>
+          <p>1-hour shoot, 10 edited images, basic social cuts.</p>
+          <p class="price">From $499</p>
+        </div>
+        <div class="card">
+          <h3>Brand Essentials</h3>
+          <p>Half-day shoot, 30 edited images, 1 short video, social pack.</p>
+          <p class="price">From $1,299</p>
+        </div>
+        <div class="card">
+          <h3>Campaign</h3>
+          <p>Full creative direction, video production, performance-based social strategy.</p>
+          <p class="price">Custom</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="portfolio" class="container portfolio" aria-labelledby="portfolio-heading">
+      <h2 id="portfolio-heading">Selected Work</h2>
+      <p class="muted">Photo, video, and social campaigns — click to view details.</p>
+      <div class="portfolio-grid">
+        <article class="project">
+          <img alt="Project 1 — hero image" src="images/placeholder-1.jpg">
+          <h3>Project 1</h3>
+          <p>Product photography + social campaign.</p>
+        </article>
+        <article class="project">
+          <img alt="Project 2 — hero image" src="images/placeholder-2.jpg">
+          <h3>Project 2</h3>
+          <p>Short-form video and ad creatives.</p>
+        </article>
+        <article class="project">
+          <img alt="Project 3 — hero image" src="images/placeholder-3.jpg">
+          <h3>Project 3</h3>
+          <p>Brand shoot and content strategy.</p>
+        </article>
+      </div>
+      <p class="cta"><a class="btn-secondary" href="#contact">Inquire about a custom package</a></p>
+    </section>
+
+    <section id="about" class="container about" aria-labelledby="about-heading">
+      <h2 id="about-heading">About</h2>
+      <p>Canales Creative partners with brands to craft photo and video content that tells a story and drives results. We combine creative direction, production, and social-first delivery to help you convert visual attention into leads.</p>
+      <div class="two-col">
+        <div>
+          <h3>Approach</h3>
+          <p>Strategy-forward shoots, performance-minded editing, and clear deliverables so you can publish and promote quickly.</p>
+        </div>
+        <div>
+          <h3>Studio & Availability</h3>
+          <p>Based online — bookings available for remote and local shoots. Typical lead time: 1–3 weeks.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="container contact" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact</h2>
+      <p class="muted">Email: <a href="mailto:elijahcanales56@gmail.com">elijahcanales56@gmail.com</a></p>
+
+      <!-- Replace "your-form-id" with your Formspree form ID (see README) -->
+      <form id="contact-form" class="contact-form" action="https://formspree.io/f/your-form-id" method="POST" novalidate>
+        <label>
+          Name
+          <input type="text" name="name" id="name" required>
+        </label>
+
+        <label>
+          Email
+          <input type="email" name="_replyto" id="email" required>
+        </label>
+
+        <label>
+          Project / Message
+          <textarea name="message" id="message" rows="6" required></textarea>
+        </label>
+
+        <!-- Optional: subject or tags for your inbox -->
+        <input type="hidden" name="_subject" value="New inquiry from website">
+        <button type="submit" class="btn">Send inquiry</button>
+
+        <p id="form-status" class="form-status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <p>© <span id="year"></span> Canales Creative — Built for results.</p>
+      <p class="muted">Follow: <a href="#" aria-label="Instagram">Instagram</a> · <a href="#" aria-label="LinkedIn">LinkedIn</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
