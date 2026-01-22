@@ -224,6 +224,24 @@ body{
   .gallery{grid-template-columns:1fr}
   .gallery-thumbs{gap:.5rem}
 }
+/* Ensure media container fades */
+.gallery-media {
+  width: 100%;
+  max-height: 680px;
+  overflow: hidden;
+  transition: opacity .45s ease, transform .45s ease;
+  opacity: 1;
+}
+.gallery-media.is-fading {
+  opacity: 0;
+  transform: scale(.997);
+}
+.gallery-media img, .gallery-media video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
 /* --- existing CSS above remains; below are the hero/slideshow rules to add or replace the hero-related section --- */
 
 .hero{
