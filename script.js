@@ -119,3 +119,16 @@ if (form) {
     setSelectedThumb(initial);
   }
 })();
+// --- existing script content (nav toggle, year, form) should remain above this block ---
+// Background slideshow for hero (cycles every 4 seconds)
+(function () {
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return; // do not auto-animate for users who prefer reduced motion
+
+  const heroBg = document.querySelector('.hero-bg');
+  if (!heroBg) return;
+  const slides = Array.from(heroBg.querySelectorAll('.bg-slide'));
+  if (!slides.length) return;
+
+  let current = slides.findIndex(s => s.classList.contains('visible'));
+  if (current < 0) current = 
