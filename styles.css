@@ -105,14 +105,103 @@ body{
 .card h3{font-family:"Playfair Display", serif; margin:0 0 .25rem}
 .price{font-weight:600; color:var(--muted); margin-top:.5rem}
 
-.portfolio-grid{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin-top:1rem}
-.project img{width:100%; height:auto; border-radius:6px; display:block}
-.project h3{margin:.5rem 0 .25rem}
-
 .muted{color:var(--muted)}
 
 .two-col{display:grid; gap:1rem; grid-template-columns:1fr 1fr; margin-top:1rem}
 
+/* Gallery styles */
+.gallery{
+  display:grid;
+  gap:1rem;
+  grid-template-columns: 1fr;
+  margin-top:1rem;
+}
+
+.gallery-main{
+  position:relative;
+  overflow:hidden;
+  border-radius:10px;
+  background:#fafafa;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:0.5rem;
+  border:1px solid #f1f1f1;
+}
+.gallery-main img{
+  width:100%;
+  max-height:680px;
+  object-fit:cover;
+  display:block;
+  transition:opacity .45s ease, transform .45s ease;
+  opacity:1;
+}
+.gallery-main img.is-fading{
+  opacity:0;
+  transform:scale(.995);
+}
+.gallery-info{
+  padding:1rem;
+  text-align:left;
+  width:100%;
+}
+.gallery-info h3{margin:.25rem 0 .25rem; font-family:"Playfair Display",serif}
+.gallery-info p{margin:0; color:var(--muted)}
+
+/* Thumbnails */
+.gallery-thumbs{
+  display:flex;
+  gap:.6rem;
+  margin-top:.75rem;
+  overflow-x:auto;
+  padding-bottom:.25rem;
+}
+.thumb{
+  background:none;
+  border:2px solid transparent;
+  padding:0;
+  border-radius:8px;
+  min-width:84px;
+  height:60px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:6px;
+  display:block;
+}
+.thumb[aria-selected="true"]{
+  border-color:var(--accent);
+  box-shadow:0 4px 18px rgba(0,0,0,0.06);
+}
+
+/* Accessibility focus */
+.thumb:focus{outline:3px solid rgba(157,191,156,0.18); outline-offset:2px}
+
+/* Smaller screens: main image first then thumbs horizontally */
+@media (min-width:900px){
+  .gallery{
+    grid-template-columns: 1fr 320px;
+    align-items:start;
+  }
+  .gallery-main{padding:0}
+  .gallery-thumbs{
+    flex-direction:column;
+    gap:.75rem;
+    overflow:auto;
+    margin-top:0;
+  }
+  .thumb{min-width:120px; height:80px}
+  .gallery-info{padding:1rem 1rem 1.5rem 1rem}
+}
+
+/* Contact and footer spacing */
 .contact-form{display:grid; gap:.75rem; max-width:720px}
 .contact-form input, .contact-form textarea{
   width:100%;
@@ -125,11 +214,13 @@ body{
 
 .site-footer{border-top:1px solid #f1f1f1; padding:1rem 0; text-align:center; color:var(--muted); margin-top:2rem; font-size:.95rem}
 
-/* Responsive */
+/* Responsive nav toggle */
 @media (max-width:880px){
   .nav-toggle{display:inline-block}
   .site-nav{display:none}
   .site-nav[aria-hidden="false"]{display:block}
   .site-nav ul{flex-direction:column; gap:0.5rem}
   .two-col{grid-template-columns:1fr}
+  .gallery{grid-template-columns:1fr}
+  .gallery-thumbs{gap:.5rem}
 }
