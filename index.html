@@ -61,24 +61,45 @@
 
     <section id="portfolio" class="container portfolio" aria-labelledby="portfolio-heading">
       <h2 id="portfolio-heading">Selected Work</h2>
-      <p class="muted">Photo, video, and social campaigns — click to view details.</p>
-      <div class="portfolio-grid">
-        <article class="project">
-          <img src="placeholder-1.jpg">
-          <h3>Project 1</h3>
-          <p>Product photography + social campaign.</p>
-        </article>
-        <article class="project">
-          <img src="placeholder-2.jpg">
-          <h3>Project 2</h3>
-          <p>Short-form video and ad creatives.</p>
-        </article>
-        <article class="project">
-          <img src="placeholder-3.jpg"> 
-          <h3>Project 3</h3>
-          <p>Brand shoot and content strategy.</p>
-        </article>
+      <p class="muted">Click a project to view details.</p>
+
+      <!-- Gallery: main display + thumbnails -->
+      <div class="gallery" id="project-gallery">
+        <div class="gallery-main" role="region" aria-live="polite">
+          <img id="gallery-main-img" src="images/placeholder-1.jpg" alt="Project 1 — product photography" />
+          <div class="gallery-info">
+            <h3 id="gallery-title">Project 1</h3>
+            <p id="gallery-desc">Product photography + social campaign.</p>
+          </div>
+        </div>
+
+        <div class="gallery-thumbs" role="tablist" aria-label="Project thumbnails">
+          <!-- Thumbnails are buttons (keyboard accessible). Update data-src and data-* values to match your filenames -->
+          <button class="thumb" role="tab" aria-selected="true" aria-controls="gallery-main-img"
+                  data-src="images/placeholder-1.jpg"
+                  data-title="Project 1"
+                  data-desc="Product photography + social campaign.">
+            <img src="images/placeholder-1.jpg" alt="Thumbnail — Project 1" loading="lazy">
+          </button>
+
+          <button class="thumb" role="tab" aria-selected="false" aria-controls="gallery-main-img"
+                  data-src="images/placeholder-2.jpg"
+                  data-title="Project 2"
+                  data-desc="Short-form video and ad creatives.">
+            <img src="images/placeholder-2.jpg" alt="Thumbnail — Project 2" loading="lazy">
+          </button>
+
+          <button class="thumb" role="tab" aria-selected="false" aria-controls="gallery-main-img"
+                  data-src="images/placeholder-3.jpg"
+                  data-title="Project 3"
+                  data-desc="Brand shoot and content strategy.">
+            <img src="images/placeholder-3.jpg" alt="Thumbnail — Project 3" loading="lazy">
+          </button>
+
+          <!-- Add more thumbnails by copying a button and updating data-src/data-title/data-desc -->
+        </div>
       </div>
+
       <p class="cta"><a class="btn-secondary" href="#contact">Inquire about a custom package</a></p>
     </section>
 
@@ -118,7 +139,6 @@
           <textarea name="message" id="message" rows="6" required></textarea>
         </label>
 
-        <!-- Optional: subject or tags for your inbox -->
         <input type="hidden" name="_subject" value="New inquiry from website">
         <button type="submit" class="btn">Send inquiry</button>
 
