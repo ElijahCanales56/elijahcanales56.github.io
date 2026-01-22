@@ -90,12 +90,15 @@
             <img src="placeholder-1.jpg" alt="Thumbnail — Project 1" loading="lazy">
           </button>
 
-          <button class="thumb" role="tab" aria-selected="false" aria-controls="gallery-main-img"
-                  data-src="placeholder-2.jpg"
-                  data-title="Project 2"
-                  data-desc="Short-form video and ad creatives.">
-            <img src="placeholder-2.jpg" alt="Thumbnail — Project 2" loading="lazy">
-          </button>
+          <button class="thumb" role="tab" aria-selected="false" aria-controls="gallery-media"
+            data-video="webvid.mp4"
+            data-poster="thumbnail-2.jpg"
+            data-title="Project 2"
+            data-desc="Short-form video and ad creatives.">
+      <!-- use a small poster/thumb as the thumbnail (not the mp4) -->
+      <img src="thumbnail-2.jpg" alt="Thumbnail — Project 2 (video)" loading="lazy">
+      <span class="thumb-video-indicator" aria-hidden="true">▶</span>
+    </button> 
 
           <button class="thumb" role="tab" aria-selected="false" aria-controls="gallery-main-img"
                   data-src="placeholder-3.jpg"
