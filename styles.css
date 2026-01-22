@@ -224,3 +224,71 @@ body{
   .gallery{grid-template-columns:1fr}
   .gallery-thumbs{gap:.5rem}
 }
+/* --- existing CSS above remains; below are the hero/slideshow rules to add or replace the hero-related section --- */
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:4rem 0; /* keep vertical spacing; adjust as needed */
+  min-height:420px;
+  display:flex;
+  align-items:center;
+}
+
+/* Background slideshow container: sits behind content */
+.hero-bg{
+  position:absolute;
+  inset:0; /* top:0; right:0; bottom:0; left:0; */
+  z-index:0;
+  display:block;
+}
+
+/* slide images stacked on top of each other */
+.bg-slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  opacity:0;
+  transform:scale(1.01);
+  transition:opacity .8s ease, transform .8s ease;
+  will-change:opacity, transform;
+  pointer-events:none;
+}
+
+/* visible slide */
+.bg-slide.visible{
+  opacity:1;
+  transform:scale(1);
+}
+
+/* dark overlay for better text contrast */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.12));
+  z-index:1;
+  pointer-events:none;
+}
+
+/* place hero content above the bg and overlay */
+.hero-content{
+  position:relative;
+  z-index:2;
+  width:100%;
+  padding:3.5rem 1.5rem;
+  color:var(--text);
+  text-align:center;
+}
+
+/* lighten hero text (optional): use white when images are dark */
+.hero .lead, .hero h1 { color: #fff; text-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+
+/* Respect prefers-reduced-motion: disable animations and transitions */
+@media (prefers-reduced-motion: reduce){
+  .bg-slide{ transition:none; }
+  .bg-slide.visible{ opacity:1; transform:none; }
+}
