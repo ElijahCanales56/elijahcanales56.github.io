@@ -31,56 +31,132 @@ if (form) {
   });
 }
 
-/* Gallery switching with fade animation (keeps previous gallery functionality) */
+/* Gallery switching (image + video support) */
 (function () {
   const gallery = document.getElementById('project-gallery');
   if (!gallery) return;
 
-  const mainImg = document.getElementById('gallery-main-img');
+  const mediaContainer = document.getElementById('gallery-media'); // container for img/video
   const titleEl = document.getElementById('gallery-title');
   const descEl = document.getElementById('gallery-desc');
   const thumbs = Array.from(gallery.querySelectorAll('.thumb'));
 
+  // Helper to remove any existing media (img or video)
+  function clearMedia() {
+    // If there's a video playing, pause and remove it
+    const existingVideo = mediaContainer.querySelector('video');
+    if (existingVideo) {
+      existingVideo.pause();
+      // remove source to stop download if desired
+      existingVideo.removeAttribute('src');
+      existingVideo.load();
+    }
+    mediaContainer.innerHTML = ''; // remove children
+  }
+
+  // Create and return an <img> element
+  function createImage(src, alt) {
+    const img = document.createElement('img');
+    img.id = 'gallery-main-img';
+    img.src = src;
+    img.alt = alt || '';
+    img.loading = 'lazy';
+    img.style.display = 'block';
+    return img;
+  }
+
+  // Create and return a <video> element (not added to DOM yet)
+  function createVideo(src, poster, alt) {
+    const video = document.createElement('video');
+    video.id = 'gallery-main-video';
+    video.src = src;
+    if (poster) video.poster = poster;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('controls', ''); // show controls for user
+    video.preload = 'none'; // do not preload until user interacts
+    video.controls = true;
+    video.style.display = 'block';
+    // Accessible fallback alt text via aria-label
+    if (alt) video.setAttribute('aria-label', alt);
+    return video;
+  }
+
+  // Visual selection for thumbs
   function setSelectedThumb(selectedBtn) {
     thumbs.forEach(btn => {
       const isSel = btn === selectedBtn;
       btn.setAttribute('aria-selected', String(isSel));
-      if (isSel) btn.classList.add('is-active');
-      else btn.classList.remove('is-active');
+      btn.classList.toggle('is-active', isSel);
     });
   }
 
+  // Fade swap: fade out current media, then swap to new media (image or video), then fade in
   function swapProject(btn) {
     if (!btn) return;
-    const newSrc = btn.dataset.src;
+
+    const newImgSrc = btn.dataset.src;     // image path (if any)
+    const newVideoSrc = btn.dataset.video; // video path (if any)
+    const newPoster = btn.dataset.poster;  // optional poster for video
     const newTitle = btn.dataset.title || '';
     const newDesc = btn.dataset.desc || '';
 
-    if (mainImg.getAttribute('src') === newSrc) {
+    // If the currently displayed media matches requested src, just update text and selection
+    const currentImg = mediaContainer.querySelector('img');
+    const currentVideo = mediaContainer.querySelector('video');
+    if ((newImgSrc && currentImg && currentImg.src && currentImg.src.includes(newImgSrc)) ||
+        (newVideoSrc && currentVideo && currentVideo.src && currentVideo.src.includes(newVideoSrc))) {
+      titleEl.textContent = newTitle;
+      descEl.textContent = newDesc;
       setSelectedThumb(btn);
       return;
     }
 
-    mainImg.classList.add('is-fading');
+    // Begin fade-out. We'll set a class on mediaContainer to animate opacity via CSS.
+    mediaContainer.classList.add('is-fading');
 
-    const onTransitionEnd = () => {
-      mainImg.removeEventListener('transitionend', onTransitionEnd);
-      const altText = `${newTitle} — ${newDesc}`;
-      mainImg.setAttribute('src', newSrc);
-      mainImg.setAttribute('alt', altText);
+    // After fade-out transition, swap the media
+    const onFadeOut = () => {
+      mediaContainer.removeEventListener('transitionend', onFadeOut);
+
+      // Remove existing media
+      clearMedia();
+
+      // Insert new media node
+      if (newVideoSrc) {
+        const videoEl = createVideo(newVideoSrc, newPoster, `${newTitle} — ${newDesc}`);
+        mediaContainer.appendChild(videoEl);
+        // Optionally autoplay muted on load (not recommended with sound). We'll not autoplay to respect user control.
+      } else if (newImgSrc) {
+        const imgEl = createImage(newImgSrc, `${newTitle} — ${newDesc}`);
+        mediaContainer.appendChild(imgEl);
+      } else {
+        // nothing — leave blank
+      }
+
+      // Update title/desc
       titleEl.textContent = newTitle;
       descEl.textContent = newDesc;
 
-      // Force reflow then fade in
-      /* eslint-disable no-unused-expressions */
-      mainImg.offsetWidth;
-      /* eslint-enable no-unused-expressions */
-      mainImg.classList.remove('is-fading');
+      // Force reflow then remove fading class to fade in
+      void mediaContainer.offsetWidth;
+      mediaContainer.classList.remove('is-fading');
+
+      // If the inserted media is a video and you'd like it to auto-play muted, you can uncomment:
+      // const newVideo = mediaContainer.querySelector('video');
+      // if (newVideo) { newVideo.muted = true; newVideo.play().catch(()=>{}); }
     };
-    mainImg.addEventListener('transitionend', onTransitionEnd);
+
+    // Wait for transition to finish or fallback after a timeout (in case transitionend doesn't fire)
+    mediaContainer.addEventListener('transitionend', onFadeOut);
+    setTimeout(() => {
+      // If transitionend didn't fire within 600ms, run onFadeOut manually
+      if (mediaContainer.classList.contains('is-fading')) onFadeOut();
+    }, 700);
+
     setSelectedThumb(btn);
   }
 
+  // Attach handlers for clicks & keyboard
   thumbs.forEach((btn, index) => {
     btn.addEventListener('click', () => swapProject(btn));
     btn.addEventListener('keydown', (e) => {
@@ -101,9 +177,20 @@ if (form) {
     });
   });
 
+  // Initialize from the thumb with aria-selected="true" or the first thumb
   const initial = thumbs.find(t => t.getAttribute('aria-selected') === 'true') || thumbs[0];
   if (initial) {
-    mainImg.setAttribute('src', initial.dataset.src);
+    const initImg = initial.dataset.src;
+    const initVideo = initial.dataset.video;
+    if (initVideo) {
+      mediaContainer.innerHTML = '';
+      const v = createVideo(initVideo, initial.dataset.poster, `${initial.dataset.title} — ${initial.dataset.desc}`);
+      mediaContainer.appendChild(v);
+    } else if (initImg) {
+      mediaContainer.innerHTML = '';
+      const i = createImage(initImg, `${initial.dataset.title} — ${initial.dataset.desc}`);
+      mediaContainer.appendChild(i);
+    }
     titleEl.textContent = initial.dataset.title || '';
     descEl.textContent = initial.dataset.desc || '';
     setSelectedThumb(initial);
