@@ -31,7 +31,7 @@ if (form) {
   });
 }
 
-/* Gallery switching with fade animation */
+/* Gallery switching with fade animation (keeps previous gallery functionality) */
 (function () {
   const gallery = document.getElementById('project-gallery');
   if (!gallery) return;
@@ -41,7 +41,6 @@ if (form) {
   const descEl = document.getElementById('gallery-desc');
   const thumbs = Array.from(gallery.querySelectorAll('.thumb'));
 
-  // Helper to update selected thumb aria attributes and border
   function setSelectedThumb(selectedBtn) {
     thumbs.forEach(btn => {
       const isSel = btn === selectedBtn;
@@ -51,51 +50,44 @@ if (form) {
     });
   }
 
-  // Fade swap logic
   function swapProject(btn) {
     if (!btn) return;
     const newSrc = btn.dataset.src;
     const newTitle = btn.dataset.title || '';
     const newDesc = btn.dataset.desc || '';
 
-    // If already showing that src, no-op
     if (mainImg.getAttribute('src') === newSrc) {
       setSelectedThumb(btn);
       return;
     }
 
-    // Start fade out
     mainImg.classList.add('is-fading');
 
-    // After transition end, swap content and fade back in
     const onTransitionEnd = () => {
       mainImg.removeEventListener('transitionend', onTransitionEnd);
-      // Swap src and alt
       const altText = `${newTitle} — ${newDesc}`;
       mainImg.setAttribute('src', newSrc);
       mainImg.setAttribute('alt', altText);
       titleEl.textContent = newTitle;
       descEl.textContent = newDesc;
 
-      // Force reflow then remove fading class to fade in
-      // eslint-disable-next-line no-unused-expressions
+      // Force reflow then fade in
+      /* eslint-disable no-unused-expressions */
       mainImg.offsetWidth;
+      /* eslint-enable no-unused-expressions */
       mainImg.classList.remove('is-fading');
     };
     mainImg.addEventListener('transitionend', onTransitionEnd);
     setSelectedThumb(btn);
   }
 
-  // Attach click and keyboard handlers to thumbs
   thumbs.forEach((btn, index) => {
     btn.addEventListener('click', () => swapProject(btn));
     btn.addEventListener('keydown', (e) => {
-      // Enter/Space activate
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         swapProject(btn);
       }
-      // Arrow keys to move focus between thumbs
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         const next = thumbs[(index + 1) % thumbs.length];
@@ -109,26 +101,70 @@ if (form) {
     });
   });
 
-  // Optionally, initialize first thumb as selected
   const initial = thumbs.find(t => t.getAttribute('aria-selected') === 'true') || thumbs[0];
   if (initial) {
-    // Ensure main display matches initial
     mainImg.setAttribute('src', initial.dataset.src);
     titleEl.textContent = initial.dataset.title || '';
     descEl.textContent = initial.dataset.desc || '';
     setSelectedThumb(initial);
   }
 })();
-// --- existing script content (nav toggle, year, form) should remain above this block ---
-// Background slideshow for hero (cycles every 4 seconds)
+
+/* Hero background slideshow: cycles visible .bg-slide every 5 seconds with fade */
 (function () {
+  // Respect users who prefer reduced motion
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return; // do not auto-animate for users who prefer reduced motion
+  if (prefersReduced) return;
 
   const heroBg = document.querySelector('.hero-bg');
   if (!heroBg) return;
+
   const slides = Array.from(heroBg.querySelectorAll('.bg-slide'));
   if (!slides.length) return;
 
+  // Ensure one slide is visible initially
   let current = slides.findIndex(s => s.classList.contains('visible'));
-  if (current < 0) current = 
+  if (current < 0) {
+    current = 0;
+    slides.forEach((s, i) => s.classList.toggle('visible', i === 0));
+  }
+
+  const intervalMs = 5000; // 5 seconds
+
+  // Show slide at index (add visible class, remove from others)
+  function showSlide(index) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('visible', i === index);
+    });
+    current = index;
+  }
+
+  // Advance to next slide
+  function nextSlide() {
+    const next = (current + 1) % slides.length;
+    showSlide(next);
+  }
+
+  // Start automatic cycling
+  let timerId = setInterval(nextSlide, intervalMs);
+
+  // Pause cycling when page is hidden to save resources
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(timerId);
+      timerId = null;
+    } else if (!timerId) {
+      // resume
+      timerId = setInterval(nextSlide, intervalMs);
+    }
+  });
+
+  // Optional: pause on hover (desktop)
+  heroBg.addEventListener('mouseenter', () => {
+    clearInterval(timerId);
+    timerId = null;
+  });
+  heroBg.addEventListener('mouseleave', () => {
+    if (!timerId) timerId = setInterval(nextSlide, intervalMs);
+  });
+})();
